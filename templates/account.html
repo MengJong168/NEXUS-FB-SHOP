@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - NEXUS FB SHOP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="account-page">
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+    <div class="header-left">
+        <span class="site-name">NEXUS-SHOP</span>
+    </div>
+
+    <div class="header-right">
+        {% if user %}
+            <span class="user-welcome">Welcome, {{ user.name }}</span>
+            <img src="{{ user.picture }}" class="user-avatar">
+            <a href="{{ url_for('index') }}" class="home-btn">Home</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        {% endif %}
+    </div>
+</header>
+
+
+<!-- ================= MAIN ================= -->
+<main class="account-main">
+
+    <h1 class="page-title">My Account</h1>
+
+    <div class="account-grid">
+
+        <!-- ===== BALANCE CARD ===== -->
+        <div class="account-card-bal balance-card">
+            <h2>Current Balance</h2>
+
+            <div class="balance-display">
+                <span class="balance-amount">$0.00</span>
+                <span class="balance-currency">USD</span>
+            </div>
+
+            <button class="refresh-balance-btn" onclick="refreshBalance()">
+                Refresh
+            </button>
+        </div>
+
+
+        <!-- ===== DEPOSIT CARD ===== -->
+        <div class="account-card deposit-card">
+            <h2>Deposit via Bakong QR</h2>
+
+            <div class="deposit-form">
+                <input type="number"
+                       id="amount"
+                       placeholder="Enter amount (USD)"
+                       min="1"
+                       step="0.01"
+                       class="amount-input">
+
+                <button onclick="processDeposit()" class="deposit-btn">
+                    Generate QR
+                </button>
+            </div>
+
+            <!-- QR DISPLAY -->
+            <div id="qrContainer" class="qr-code-container" style="display:none;">
+                <img class="qr-code">
+                <p id="paymentStatus" class="qr-instruction">
+                    Waiting for payment...
+                </p>
+            </div>
+
+            <p class="method-note">
+                Minimum deposit: $1.00 USD
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ===== TRANSACTION HISTORY (Simple Placeholder) ===== -->
+<!-- ===== TRANSACTION HISTORY ===== -->
+<div class="transaction-history-card account-card">
+    <h2>Transaction History</h2>
+
+    {% if transactions %}
+    <table>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Amount (USD)</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t[0] }}</td> <!-- transaction id -->
+            <td>${{ "%.2f"|format(t[2]) }}</td> <!-- amount -->
+            <td class="{{ 'paid' if t[3]=='PAID' else 'pending' }}">
+                {{ t[3] }}
+            </td>
+            <td>{{ t[4] }}</td> <!-- created_at -->
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No transactions yet.</p>
+    {% endif %}
+</div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <p>&copy; 2025 NEXUS-SHOP. All rights reserved.</p>
+</footer>
+
+
+<!-- ================= SCRIPT ================= -->
+<script>
+let currentTransactionId = null;
+let checkInterval = null;
+
+/* ================= GENERATE QR ================= */
+function processDeposit() {
+    const amount = document.getElementById("amount").value;
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("amount", amount);
+
+    fetch("/generate_qr", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.error || "Failed to generate QR");
+            return;
+        }
+
+        document.getElementById("qrContainer").style.display = "block";
+
+        document.querySelector(".qr-code").src =
+            "data:image/png;base64," + data.qr_image;
+
+        document.getElementById("paymentStatus").innerText =
+            "Scan QR with Bakong app to pay";
+
+        currentTransactionId = data.transaction_id;
+
+        startChecking();
+    })
+    .catch(() => alert("Server error"));
+}
+
+
+/* ================= CHECK PAYMENT ================= */
+function startChecking() {
+
+    checkInterval = setInterval(() => {
+
+        const formData = new FormData();
+        formData.append("transaction_id", currentTransactionId);
+
+        fetch("/check_payment", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (data.status === "PAID") {
+                clearInterval(checkInterval);
+
+                document.getElementById("paymentStatus").innerText =
+                    "Payment Successful!";
+
+                refreshBalance();
+            }
+
+        });
+
+    }, 5000);
+}
+
+
+/* ================= REFRESH BALANCE ================= */
+function refreshBalance() {
+    fetch("/get_balance")
+    .then(res => res.json())
+    .then(data => {
+        document.querySelector(".balance-amount").innerText =
+            "$" + parseFloat(data.balance).toFixed(2);
+    });
+}
+
+
+/* ================= LOAD BALANCE ON PAGE LOAD ================= */
+document.addEventListener("DOMContentLoaded", function () {
+    refreshBalance();
+});
+</script>
+
+</body>
+</html>

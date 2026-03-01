@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NEXUS FB SHOP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page">
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="header-left">
+            <span class="site-name">NEXUS FB SHOP</span>
+        </div>
+        <div class="header-right">
+            <a href="{{ url_for('index') }}" class="back-home-btn">Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo and Welcome Message -->
+            <div class="login-header">
+                <img src="{{ url_for('static', filename='img/google.png') }}" alt="NEXUS-SHOP Logo" class="login-logo">
+                <h1>Welcome to NEXUS-SHOP</h1>
+                <p>Use your Google account to continue.</p>
+            </div>
+
+            <!-- Google Login Button -->
+            <div class="login-body">
+                <a href="{{ url_for('google_login') }}" class="google-login-btn">
+                    <img src="https://www.google.com/favicon.ico" alt="Google Icon" class="google-icon">
+                    <span>Sign in with Google</span>
+                </a>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span class="divider-text">or</span>
+                </div>
+
+                <!-- Alternative Login Options -->
+                <div class="alternative-login">
+                    <p class="guest-login" onclick="guestLogin()">Continue as Guest</p>
+                </div>
+            </div>
+
+            <!-- Login Footer -->
+            <div class="login-footer">
+                <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 NEXUS-SHOP. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        function guestLogin() {
+            // Handle guest login
+            alert("Continuing as guest...");
+            window.location.href = "{{ url_for('index') }}";
+        }
+        
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashMessages = document.querySelector('.flash-messages');
+            if (flashMessages) {
+                flashMessages.style.display = 'none';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
