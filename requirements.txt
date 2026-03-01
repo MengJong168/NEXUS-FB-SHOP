@@ -3,16 +3,12 @@ Authlib
 requests
 qrcode
 Pillow
-sqlite3
 bakong-khqr
-bakong_khqr
 bakong-khqr[image]
 Pillow
 pytz
-Flask
 qrcode[pil]
-requests
-Pillow
 gunicorn
+Flask-SQLAlchemy
 
 
