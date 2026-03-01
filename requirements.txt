@@ -1,0 +1,6 @@
+Flask
+Authlib
+requests
+qrcode
+Pillow
+bakong-khqr
