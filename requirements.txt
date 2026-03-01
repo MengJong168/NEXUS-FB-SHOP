@@ -3,4 +3,5 @@ Authlib
 requests
 qrcode
 Pillow
+sqlite3
 bakong-khqr
