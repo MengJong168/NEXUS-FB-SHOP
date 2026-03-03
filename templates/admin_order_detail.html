@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-badge.completed { background: #d4edda; color: #155724; }
+        .status-badge.pending { background: #fff3cd; color: #856404; }
+        .status-badge.refunded { background: #f8d7da; color: #721c24; }
+        
+        .account-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .order-info {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div style="margin-bottom: 20px;">
+    <a href="/admin_orders" class="btn">⬅ Back to Orders</a>
+</div>
+
+<h2>Order Details: {{ order.id }}</h2>
+
+<div class="order-info">
+    <p><strong>User Email:</strong> {{ order.user_email }}</p>     <!-- Fixed: was order[1] -->
+    <p><strong>Service:</strong> {{ order.service }}</p>           <!-- Fixed: was order[2] -->
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>         <!-- Fixed: was order[3] -->
+    <p><strong>Total Price:</strong> ${{ "%.2f"|format(order.total_price) }}</p>  <!-- Fixed: was order[4] -->
+    <p><strong>Status:</strong> 
+        <span class="status-badge {{ order.status }}">{{ order.status }}</span>  <!-- Fixed: was order[5] -->
+    </p>
+    <p><strong>Date:</strong> {{ order.created_at }}</p>           <!-- Fixed: was order[6] -->
+</div>
+
+<h3>Purchased Accounts ({{ items|length }})</h3>
+
+{% if items and items|length > 0 %}
+    <div style="margin: 20px 0;">
+        {% for item in items %}
+        <div class="account-item">
+            <strong>Account {{ loop.index }}:</strong><br>
+            {{ item.account_pipe }}  <!-- Fixed: was item[0] -->
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No account details available</p>
+{% endif %}
+
+<h3>Update Order Status</h3>
+
+<div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <form action="/update_order_status/{{ order.id }}" method="POST">
+        <select name="status" style="padding: 8px; margin-right: 10px;">
+            <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="refunded" {% if order.status == 'refunded' %}selected{% endif %}>Refunded</option>
+        </select>
+        <button type="submit" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Update Status</button>
+    </form>
+</div>
+
+</body>
+</html>

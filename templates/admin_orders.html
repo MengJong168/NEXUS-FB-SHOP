@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-badge.completed { background: #d4edda; color: #155724; }
+        .status-badge.pending { background: #fff3cd; color: #856404; }
+        .status-badge.refunded { background: #f8d7da; color: #721c24; }
+        
+        .actions a {
+            margin: 0 5px;
+            text-decoration: none;
+        }
+        
+        .btn {
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .btn-view { color: #667eea; }
+        .btn-delete { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<h1>Order Management</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/admin" class="btn">⬅ Back to Admin</a>
+</div>
+
+{% if orders and orders|length > 0 %}
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>User Email</th>
+        <th>Service</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for o in orders %}
+    <tr>
+        <td>{{ o.id[:10] }}...</td>           <!-- Fixed: was o[0] -->
+        <td>{{ o.user_email }}</td>            <!-- Fixed: was o[1] -->
+        <td>{{ o.service }}</td>               <!-- Fixed: was o[2] -->
+        <td>{{ o.quantity }}</td>              <!-- Fixed: was o[3] -->
+        <td>${{ "%.2f"|format(o.total_price) }}</td>  <!-- Fixed: was o[4] -->
+        <td>
+            <span class="status-badge {{ o.status }}">{{ o.status }}</span>  <!-- Fixed: was o[5] -->
+        </td>
+        <td>{{ o.created_at[:16] if o.created_at else 'N/A' }}</td>  <!-- Fixed: was o[6] -->
+        <td class="actions">
+            <a href="/admin_order/{{ o.id }}" class="btn-view">👁️ View</a> |
+            <a href="/delete_order/{{ o.id }}" class="btn-delete" onclick="return confirm('Delete this order?')">🗑️ Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No orders found.</p>
+{% endif %}
+
+</body>
+</html>

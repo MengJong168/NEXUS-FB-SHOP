@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - NEXUS FB SHOP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .stock-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-badge.active { background: #d4edda; color: #155724; }
+        .status-badge.banned { background: #f8d7da; color: #721c24; }
+        .status-badge.paid { background: #d4edda; color: #155724; }
+        .status-badge.pending { background: #fff3cd; color: #856404; }
+        
+        .btn {
+            padding: 5px 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2px;
+            font-size: 12px;
+        }
+        .btn-ban { background: #dc3545; color: white; }
+        .btn-unban { background: #28a745; color: white; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 3px 8px; cursor: pointer; }
+        .btn-cut { background: #ffc107; color: black; border: none; padding: 3px 8px; cursor: pointer; }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-forms {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .action-forms form {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .action-forms input[type="number"] {
+            width: 70px;
+            padding: 3px;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<!-- STATS CARDS -->
+<div class="stats-container">
+    <div class="stat-card">
+        <h3>Total System Balance</h3>
+        <div class="value">${{ "%.2f"|format(total_balance) }}</div>
+    </div>
+    
+    <div class="stat-card stock-card">
+        <h3>KH Accounts Stock</h3>
+        <div class="value">{{ kh_stock }}</div>
+    </div>
+    
+    <div class="stat-card stock-card">
+        <h3>US Accounts Stock</h3>
+        <div class="value">{{ us_stock }}</div>
+    </div>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="card">
+    <h2>Quick Links</h2>
+    <div style="display: flex; gap: 20px;">
+        <a href="/admin_stock" class="btn" style="background: #667eea; color: white; padding: 8px 16px;">📦 View FB Stock</a>
+        <a href="/admin_orders" class="btn" style="background: #667eea; color: white; padding: 8px 16px;">📋 Manage Orders</a>
+    </div>
+</div>
+
+<!-- USERS TABLE -->
+<div class="card">
+    <h2>Users ({{ users|length }})</h2>
+    
+    {% if users and users|length > 0 %}
+    <table>
+        <tr>
+            <th>User ID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Balance (USD)</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.id[:8] }}...</td>  <!-- Fixed: was u[0] -->
+            <td>{{ u.email }}</td>       <!-- Fixed: was u[1] -->
+            <td>{{ u.name or 'N/A' }}</td>
+            <td>${{ "%.2f"|format(u.balance) }}</td>  <!-- Fixed: was u[2] -->
+            <td>
+                <span class="status-badge {{ 'active' if u.banned == 0 else 'banned' }}">
+                    {{ 'ACTIVE' if u.banned == 0 else 'BANNED' }}  <!-- Fixed: was u[3] -->
+                </span>
+            </td>
+            <td>
+                <div class="action-forms">
+                    <!-- Ban/Unban button -->
+                    {% if u.banned == 0 %}
+                        <a href="/ban_user/{{ u.id }}" class="btn btn-ban" onclick="return confirm('Ban this user?')">🚫 Ban</a>
+                    {% else %}
+                        <a href="/unban_user/{{ u.id }}" class="btn btn-unban" onclick="return confirm('Unban this user?')">✅ Unban</a>
+                    {% endif %}
+
+                    <!-- Add balance form -->
+                    <form action="/add_balance/{{ u.id }}" method="POST">
+                        <input type="number" step="0.01" name="amount" placeholder="Add $" required>
+                        <button type="submit" class="btn-add">➕ Add</button>
+                    </form>
+
+                    <!-- Cut balance form -->
+                    <form action="/cut_balance/{{ u.id }}" method="POST">
+                        <input type="number" step="0.01" name="amount" placeholder="Cut $" required>
+                        <button type="submit" class="btn-cut">➖ Cut</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No users found.</p>
+    {% endif %}
+</div>
+
+<!-- TRANSACTIONS TABLE -->
+<div class="card">
+    <h2>Recent Transactions ({{ transactions|length }})</h2>
+    
+    {% if transactions and transactions|length > 0 %}
+    <table>
+        <tr>
+            <th>Transaction ID</th>
+            <th>User ID</th>
+            <th>Amount (USD)</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.id[:8] }}...</td>           <!-- Fixed: was t[0] -->
+            <td>{{ t.user_id[:8] }}...</td>      <!-- Fixed: was t[1] -->
+            <td>${{ "%.2f"|format(t.amount) }}</td>  <!-- Fixed: was t[2] -->
+            <td>
+                <span class="status-badge {{ 'paid' if t.status == 'PAID' else 'pending' }}">
+                    {{ t.status }}  <!-- Fixed: was t[3] -->
+                </span>
+            </td>
+            <td>{{ t.created_at[:16] if t.created_at else 'N/A' }}</td>  <!-- Fixed: was t[4] -->
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No transactions found.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - NEXUS FB SHOP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="account-page">
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+    <div class="header-left">
+        <span class="site-name">NEXUS-SHOP</span>
+    </div>
+
+    <div class="header-right">
+        {% if user %}
+            <span class="user-welcome">Welcome, {{ user.name }}</span>
+            <img src="{{ user.picture }}" class="user-avatar">
+            <a href="{{ url_for('index') }}" class="home-btn">Home</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        {% endif %}
+    </div>
+</header>
+
+
+<!-- ================= MAIN ================= -->
+<main class="account-main">
+
+    <h1 class="page-title">My Account</h1>
+
+    <div class="account-grid">
+
+        <!-- ===== BALANCE CARD ===== -->
+        <div class="account-card-bal balance-card">
+            <h2>Current Balance</h2>
+
+            <div class="balance-display">
+                <span class="balance-amount">${{ "%.2f"|format(balance) }}</span>
+                <span class="balance-currency">USD</span>
+            </div>
+
+            <button class="refresh-balance-btn" onclick="refreshBalance()">
+                Refresh
+            </button>
+        </div>
+
+
+        <!-- ===== DEPOSIT CARD ===== -->
+        <div class="account-card deposit-card">
+            <h2>Deposit via Bakong QR</h2>
+
+            <div class="deposit-form">
+                <input type="number"
+                       id="amount"
+                       placeholder="Enter amount (USD)"
+                       min="1"
+                       step="0.01"
+                       class="amount-input">
+
+                <button onclick="processDeposit()" class="deposit-btn">
+                    Generate QR
+                </button>
+            </div>
+
+            <!-- QR DISPLAY -->
+            <div id="qrContainer" class="qr-code-container" style="display:none;">
+                <img class="qr-code">
+                <p id="paymentStatus" class="qr-instruction">
+                    Waiting for payment...
+                </p>
+            </div>
+
+            <p class="method-note">
+                Minimum deposit: $1.00 USD
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ===== TRANSACTION HISTORY ===== -->
+    <div class="transaction-history-card account-card">
+        <h2>Transaction History</h2>
+
+        {% if transactions and transactions|length > 0 %}
+        <table>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Amount (USD)</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+            {% for t in transactions %}
+            <tr>
+                <td>{{ t.id if t.id else t[0] }}</td>
+                <td>${{ "%.2f"|format(t.amount if t.amount else t[2]) }}</td>
+                <td class="{{ 'paid' if (t.status if t.status else t[3]) == 'PAID' else 'pending' }}">
+                    {{ t.status if t.status else t[3] }}
+                </td>
+                <td>{{ t.created_at if t.created_at else t[4] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No transactions yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- ===== ORDER HISTORY ===== -->
+    {% if orders and orders|length > 0 %}
+    <div class="transaction-history-card account-card">
+        <h2>Order History</h2>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Service</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            {% for o in orders %}
+            <tr>
+                <td>{{ o.order_id if o.order_id else o.id }}</td>
+                <td>{{ o.service if o.service else 'Unknown' }}</td>
+                <td>{{ o.quantity if o.quantity else 1 }}</td>
+                <td>${{ "%.2f"|format(o.total_price if o.total_price else o.amount|float * o.quantity|float) }}</td>
+                <td class="{{ (o.status|lower if o.status else 'completed') }}">
+                    {{ o.status if o.status else 'Completed' }}
+                </td>
+                <td>{{ o.order_date if o.order_date else o.created_at }}</td>
+                <td>
+                    <button onclick="viewOrderDetails('{{ o.order_id if o.order_id else o.id }}')" class="view-btn">View</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <p>&copy; 2025 NEXUS-SHOP. All rights reserved.</p>
+</footer>
+
+
+<!-- ================= SCRIPT ================= -->
+<script>
+let currentTransactionId = null;
+let checkInterval = null;
+
+/* ================= GENERATE QR ================= */
+function processDeposit() {
+    const amount = document.getElementById("amount").value;
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("amount", amount);
+
+    fetch("/generate_qr", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.error || "Failed to generate QR");
+            return;
+        }
+
+        document.getElementById("qrContainer").style.display = "block";
+
+        document.querySelector(".qr-code").src =
+            "data:image/png;base64," + data.qr_image;
+
+        document.getElementById("paymentStatus").innerText =
+            "Scan QR with any banking app";
+
+        currentTransactionId = data.transaction_id;
+
+        startChecking();
+    })
+    .catch(() => alert("Server error"));
+}
+
+
+/* ================= CHECK PAYMENT ================= */
+function startChecking() {
+    if (checkInterval) clearInterval(checkInterval);
+
+    checkInterval = setInterval(() => {
+        const formData = new FormData();
+        formData.append("transaction_id", currentTransactionId);
+
+        fetch("/check_payment", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "PAID") {
+                clearInterval(checkInterval);
+                checkInterval = null;
+
+                document.getElementById("paymentStatus").innerText =
+                    "Payment Successful!";
+                document.getElementById("paymentStatus").style.color = "green";
+
+                refreshBalance();
+                
+                // Reload page after 2 seconds to show updated transactions
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+        })
+        .catch(error => console.error("Error checking payment:", error));
+    }, 3000);
+}
+
+
+/* ================= REFRESH BALANCE ================= */
+function refreshBalance() {
+    fetch("/get_balance")
+    .then(res => res.json())
+    .then(data => {
+        document.querySelector(".balance-amount").innerText =
+            "$" + parseFloat(data.balance || 0).toFixed(2);
+    })
+    .catch(error => console.error("Error refreshing balance:", error));
+}
+
+
+/* ================= VIEW ORDER DETAILS ================= */
+function viewOrderDetails(orderId) {
+    if (!orderId || orderId === 'None' || orderId === 'undefined') {
+        alert("Invalid order ID");
+        return;
+    }
+    
+    fetch(`/api/order/${orderId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        // Create a popup with order details
+        let accounts = data.accounts || data.all_accounts || [];
+        let details = `Order: ${data.order_id || data.id || 'N/A'}\n`;
+        details += `Service: ${data.service || 'N/A'}\n`;
+        details += `Quantity: ${data.quantity || 1}\n`;
+        details += `Total: $${parseFloat(data.total_price || data.amount || 0).toFixed(2)}\n\n`;
+        details += `Accounts:\n`;
+        
+        if (accounts.length > 0) {
+            accounts.forEach((acc, index) => {
+                details += `${index + 1}. ${acc}\n`;
+            });
+        } else {
+            details += "No account details available";
+        }
+        
+        alert(details);
+    })
+    .catch(error => {
+        console.error("Error fetching order:", error);
+        alert("Error fetching order details");
+    });
+}
+
+
+/* ================= LOAD BALANCE ON PAGE LOAD ================= */
+document.addEventListener("DOMContentLoaded", function () {
+    refreshBalance();
+    
+    // Clear any existing intervals when leaving the page
+    window.addEventListener("beforeunload", function() {
+        if (checkInterval) {
+            clearInterval(checkInterval);
+        }
+    });
+});
+</script>
+
+<style>
+/* Keep your existing styles */
+.view-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.view-btn:hover {
+    background: #5a67d8;
+}
+
+.paid { color: green; }
+.pending { color: orange; }
+</style>
+
+</body>
+</html>
