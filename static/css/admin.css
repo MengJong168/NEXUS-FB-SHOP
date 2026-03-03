@@ -1,0 +1,200 @@
+/* ========================================
+   GLOBAL
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 30px;
+}
+
+/* ========================================
+   HEADINGS
+======================================== */
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-size: 22px;
+    margin: 20px 0 10px;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 20px 0 10px;
+}
+
+/* ========================================
+   LINKS
+======================================== */
+
+a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Back link */
+a[href="/admin_orders"] {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   CARD STYLE
+======================================== */
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+/* ========================================
+   TABLE STYLE
+======================================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #1e293b;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #334155;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #334155;
+}
+
+tr:hover {
+    background: #273549;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease;
+    background: #3b82f6;
+    color: white;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+/* Danger Button */
+.danger {
+    background: #ef4444;
+    color: white;
+}
+
+.danger:hover {
+    background: #dc2626;
+}
+
+/* Success Button */
+.success {
+    background: #22c55e;
+}
+
+.success:hover {
+    background: #16a34a;
+}
+
+/* ========================================
+   INPUTS
+======================================== */
+
+input, select {
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    margin-right: 10px;
+    min-width: 120px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* ========================================
+   STATUS COLORS
+======================================== */
+
+.status-completed {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #f59e0b;
+    font-weight: bold;
+}
+
+.status-refunded {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+/* ========================================
+   ORDER DETAIL INFO BLOCK
+======================================== */
+
+.order-info p {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    input, select {
+        min-width: 80px;
+    }
+}

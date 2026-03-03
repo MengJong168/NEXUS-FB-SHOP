@@ -14,8 +14,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    background-color: #333333;
+    padding: 25px;
+    background-color: #101e76;
     color: white;
     flex-wrap: wrap;
 }
@@ -26,10 +26,6 @@ body {
     gap: 10px;
 }
 
-.header-left .logo {
-    width: 40px;
-    height: 40px;
-}
 
 .header-left .site-name {
     font-size: 22px;
@@ -57,7 +53,7 @@ body {
     background-position: center;
     color: white;
     text-align: center;
-    padding: 60px 20px;
+    padding: 100px;
     max-height: 400px;
     display: flex;
     flex-direction: column;
@@ -99,7 +95,7 @@ main {
 
 .section-title {
     font-size: 32px;
-    color: #333;
+    color: #333333;
     margin-bottom: 30px;
     text-align: center;
     display: block;
@@ -115,7 +111,7 @@ main {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background-color: #f96d00;
+    background-color: #00ff00;
     border-radius: 2px;
 }
 
@@ -124,7 +120,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 30px;
+    gap: 10px;
     max-width: 1200px;
     margin: 0;
     padding: 0;
@@ -136,7 +132,6 @@ main {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    width: 300px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid #e0e0e0;
 }
@@ -148,13 +143,13 @@ main {
 
 .product-image {
     background: white;
-    padding: 5px;
+    padding: 0px;
     text-align: center;
     border-bottom: 2px solid #f96d00;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 160px;
+    height: 130px;
 }
 
 .product-image img {
@@ -170,22 +165,22 @@ main {
 }
 
 .product-info {
-    padding: 20px;
+    padding: 10px;
     text-align: left;
 }
 
 .product-title {
     font-size: 20px;
     color: #333;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     font-weight: bold;
 }
 
 .product-stock {
     font-size: 14px;
     color: #666;
-    margin-bottom: 15px;
-    padding: 8px;
+    margin-bottom: 5px;
+    padding: 4px;
     background-color: #f8f8f8;
     border-radius: 6px;
     display: inline-block;
@@ -199,7 +194,7 @@ main {
 
 /* Quantity Selector */
 .quantity-selector {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: left;
 }
 
@@ -322,7 +317,7 @@ main {
     
     .products-container {
         justify-content: center;
-        gap: 15px;
+        gap: 10px;
     }
     
     .product-card {
@@ -367,7 +362,7 @@ main {
 
 @media (max-width: 480px) {
     .hero-banner {
-        padding: 40px 10px;
+        padding: 70px;
         max-height: 300px;
     }
 
@@ -398,35 +393,34 @@ main {
     
     .products-container {
         justify-content: center;
-        gap: 20px;
+        gap: 10px;
     }
     
     .product-card {
         width: 100%;
-        max-width: 320px;
     }
 }
 
 @media (max-width: 768px) {
-    .products-container {
-        justify-content: flex-start;
-        gap: 25px;
-    }
-    
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}    
     main {
         padding: 30px 20px;
     }
     
     .product-card {
         width: calc(50% - 15px);
-        min-width: 260px;
+        min-width: 200px;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .products-container {
         justify-content: flex-start;
-        gap: 25px;
+        gap: 15px;
     }
     
     .product-card {
@@ -435,8 +429,8 @@ main {
 }
 /* Order History Table Styles */
 .order-history-container {
-    margin-top: 60px;
-    padding: 20px;
+    margin-top: 30px;
+    padding: 5px;
     background-color: #0d1220;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -659,7 +653,7 @@ main {
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 25px;
 }
 
 .footer-content p {
@@ -716,7 +710,7 @@ main {
 
 @media (max-width: 480px) {
     .site-footer {
-        padding: 12px 0;
+        padding: 25px;
         margin-top: 25px;
     }
     
@@ -1188,15 +1182,15 @@ main {
 /* QR Code */
 .qr-code-container {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     background: #f8f8f8;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .qr-code {
     width: 150px;
-    height: 150px;
+    height: 100%;
     margin-bottom: 10px;
 }
 
@@ -1239,7 +1233,7 @@ main {
 .deposit-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #f96d00, #e85c00);
+    background: linear-gradient(135deg, #65574c, #e85c00);
     color: white;
     border: none;
     border-radius: 8px;
@@ -1430,11 +1424,11 @@ main {
 .account-btn {
     padding: 8px 16px;
     font-size: 14px;
-    background-color: #f96d00;
+    background-color: #ffeb3b;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
 }
 
@@ -1836,7 +1830,7 @@ main {
 .order-history-section {
     margin-top: 40px;
     padding: 20px;
-    background: linear-gradient(186deg, #0040ff, #000000);
+    background: #ffffff;
     border-radius: 20px;
     border: 1px solid #00ffff33;
 }
@@ -1855,7 +1849,7 @@ main {
     text-align: left;
     padding: 12px;
     background: #0d1220;
-    color: #00ffff;
+    color: #fff;
     font-weight: 600;
     border-bottom: 2px solid #00ffff33;
 }
@@ -1945,7 +1939,7 @@ main {
 .notification-success {
     background: #00ff001a;
     border: 1px solid #00ff00;
-    color: #00ff00;
+    color: #ffffff;
 }
 
 .notification-error {
@@ -2003,4 +1997,119 @@ main {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+button {
+    padding: 4px 8px;
+    border: none;
+    background: #222;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444;
+}
+
+input {
+    padding: 4px;
+    width: 80px;
+}
+/* ==============================
+   TELEGRAM SUPPORT BUTTON
+============================== */
+
+.telegram-support {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: #0088cc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    transition: 0.3s ease;
+    z-index: 9999;
+}
+
+.telegram-support img {
+    width: 32px;
+    height: 32px;
+}
+
+.telegram-support:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+/* ==============================
+   TOOLS CARD SECTION
+============================== */
+
+/* ==============================
+   TOOLS CARD GRID (2 columns)
+============================== */
+
+.tools-card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 30px 0;
+}
+
+.tool-card {
+    background: #1e293b;
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transition: 0.3s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+}
+
+.tool-icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #3b82f6;
+}
+
+.tool-card h3 {
+    margin-bottom: 10px;
+}
+
+.tool-card p {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 18px;
+}
+
+.tool-action-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #3b82f6;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.tool-action-btn:hover {
+    background: #2563eb;
+}.products-container
+
+/* Green button */
+.tool-action-btn.green {
+    background: #16a34a;
+}
+
+.tool-action-btn.green:hover {
+    background: #15803d;
 }
