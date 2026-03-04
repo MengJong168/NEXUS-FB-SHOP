@@ -1260,9 +1260,9 @@ main {
 }
 
 .deposit-btn:hover {
-    background: linear-gradient(135deg, #e85c00, #d44b00);
+    background: #00ff00;
     transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(249, 109, 0, 0.3);
+    box-shadow: #00ff00;
 }
 
 .method-note {
