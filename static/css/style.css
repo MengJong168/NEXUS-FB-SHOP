@@ -1139,6 +1139,7 @@ main {
 
 .balance-amount {
     font-size: 48px;
+    color: #00ff00;
     font-weight: bold;
     display: block;
     line-height: 1.2;
@@ -1589,13 +1590,6 @@ main {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.account-card-bal {
-    background: #0d1220;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
 .balance-card {
     border-left: 4px solid #00ff00; /* green highlight */
 }
