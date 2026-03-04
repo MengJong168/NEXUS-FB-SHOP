@@ -1575,7 +1575,8 @@ main {
 }
 /* ================= ACCOUNT PAGE CARDS ================= */
 .account-card {
-    background: #fff;
+    background: #0d1220;
+    color: #00ff00;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -1583,22 +1584,22 @@ main {
 }
 
 .account-card-bal {
-    background: blue;
+    background: #0d1220;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 .balance-card {
-    border-left: 4px solid #4CAF50; /* green highlight */
+    border-left: 4px solid #00ff00; /* green highlight */
 }
 
 .deposit-card {
-    border-left: 4px solid #2196F3; /* blue highlight */
+    border-left: 4px solid #00ff00; /* blue highlight */
 }
 
 .transaction-history-card {
-    border-left: 4px solid #FF9800; /* orange highlight */
+    border-left: 4px solid #00ff00; /* orange highlight */
     overflow-x: auto; /* allow horizontal scroll on small screens */
 }
 
