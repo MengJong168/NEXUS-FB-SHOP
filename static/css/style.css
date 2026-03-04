@@ -1007,7 +1007,7 @@ main {
 
 .page-title {
     font-size: 32px;
-    color: #333;
+    color: #00ff00;
     margin-bottom: 30px;
     text-align: left;
     position: relative;
@@ -1021,7 +1021,7 @@ main {
     left: 0;
     width: 60px;
     height: 3px;
-    background-color: #f96d00;
+    background-color: #00ff00;
     border-radius: 2px;
 }
 
@@ -1044,23 +1044,23 @@ main {
 }
 
 .home-btn {
-    background-color: transparent;
-    border: 1px solid #f96d00;
-    color: white;
+    background-color: #00ff00;
+    border: 2px solid #000000;
+    color: #000000;
 }
 
 .home-btn:hover {
-    background-color: #f96d00;
+    background-color: #00ff00;
 }
 
 .logout-btn {
-    background-color: #dc3545;
-    border: 1px solid #dc3545;
-    color: white;
+    background-color: #00ff00;
+    border: 2px solid #000000;
+    color: #000000;
 }
 
 .logout-btn:hover {
-    background-color: #c82333;
+    background-color: #00ff00;
 }
 
 /* Account Grid Layout */
@@ -1081,9 +1081,9 @@ main {
 }
 
 .account-card-bal {
-    background: blue;
+    background: #0d1220;
     border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: #0d1220;
     padding: 25px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -1116,11 +1116,11 @@ main {
 /* Balance Card */
 .balance-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .balance-card .card-header h2 {
-    color: white;
+    color: #000000;
 }
 
 .balance-card .card-icon {
@@ -1838,10 +1838,10 @@ main {
 /* Order History Section */
 .order-history-section {
     margin-top: 40px;
-    padding: 20px;
+    padding: 10px;
     background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid #00ffff33;
+    border-radius: 5px;
+    border: 2px solid #00ff00;
 }
 
 .order-history-container {
