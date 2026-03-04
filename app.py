@@ -428,8 +428,8 @@ def buy_account():
 
     # Define prices
     prices = {
-        "Facebook KH Account": 0.01,
-        "Facebook US Account": 0.01
+        "Facebook KH Account": 0.50,
+        "Facebook US Account": 0.50
     }
     price_per_unit = prices.get(service)
     if price_per_unit is None:
