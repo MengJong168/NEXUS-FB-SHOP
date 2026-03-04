@@ -995,7 +995,7 @@ main {
 }
 /* Account Page Styles */
 .account-page {
-    background-color: #f5f5f5;
+    background-color: #0d1220;
     min-height: 100vh;
 }
 
@@ -1273,7 +1273,7 @@ main {
 
 /* Transaction History Card */
 .transaction-history-card {
-    background: white;
+    background: #0d1220;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 25px;
@@ -1840,7 +1840,7 @@ main {
 .order-history-section {
     margin-top: 40px;
     padding: 10px;
-    background: #ffffff;
+    background: #1a1f2e;
     border-radius: 5px;
     border: 2px solid #00ff00;
 }
