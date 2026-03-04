@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Inter','Segoe UI',Arial,sans-serif;
-  background: #ffffff;
+  background: #0f172a;
   min-height: 100vh;
 }
 
@@ -31,7 +31,7 @@ body {
 
 h2 {
   text-align: center;
-  color: #ffffff;
+  color: #00ff00;
   font-weight: 800;
   margin-bottom: 6px;
 }
@@ -44,7 +44,8 @@ p {
 }
 
 .card {
-  background: #ffffff;
+  background: #0f172a;
+  border: 2px solid #00ff00;
   border-radius: 20px;
   padding: 24px;
   width: 100%;
@@ -58,7 +59,7 @@ label {
   font-size: 13px;
   margin-bottom: 6px;
   display: block;
-  color: #334155;
+  color: #00ff00;
 }
 
 input {
@@ -123,7 +124,7 @@ input:focus {
 }
 
 .title { font-size: 16px; font-weight: 900; color: #0f172a; }
-.msg { margin-top: 8px; font-size: 14px; color: #475569; word-break: break-word; }
+.msg { margin-top: 8px; font-size: 14px; color: #cbd5e1; word-break: break-word; }
 
 .code-wrap{ margin-top: 14px; display:flex; gap: 10px; align-items:stretch; }
 .code {
@@ -166,12 +167,12 @@ input:focus {
 ============================== */
 
 .site-header {
-  background: #0f172a;
-  padding: 15px 25px;
+  background: #0d1220;
+  padding: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
+  color: #00ff00;
 }
 
 .logo {
@@ -182,7 +183,7 @@ input:focus {
 }
 
 .nav-btn {
-  color: #3b82f6;
+  color: #00ff00;
   text-decoration: none;
   font-weight: 600;
 }
