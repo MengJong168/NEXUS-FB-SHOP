@@ -441,7 +441,7 @@ main {
     margin-top: 30px;
     padding: 5px;
     background-color: #0d1220;
-    border-radius: 12px;
+    border-radius: 5px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -1617,7 +1617,7 @@ main {
 }
 
 .transaction-history-card th {
-    background-color: #333;
+    background-color: #0d1220;
     color: #fff;
 }
 
