@@ -12,6 +12,7 @@ import csv
 import json
 from yandex_api import YandexMailClient
 from functools import wraps
+import pyotp
 
 app = Flask(__name__)
 
@@ -692,6 +693,57 @@ def get_stock_counts():
     if response.get('success'):
         return response.get('kh_stock', 0), response.get('us_stock', 0)
     return 0, 0
+
+@app.route("/", methods=["GET", "POST"])
+@app.route("/2fa", methods=["GET", "POST"])
+def twofa():
+
+    results = ""
+    keys = ""
+    result_title = ""
+    result_message = ""
+
+    if request.method == "POST":
+
+        keys = request.form.get("keys")
+
+        if keys:
+
+            key_list = keys.splitlines()
+            output = []
+
+            for key in key_list:
+
+                # remove spaces
+                clean_key = key.strip().replace(" ", "")
+
+                if clean_key:
+
+                    try:
+                        totp = pyotp.TOTP(clean_key)
+                        code = totp.now()
+
+                        output.append(code)
+
+                    except Exception:
+                        output.append("invalid key")
+
+            results = "\n".join(output)
+
+            result_title = "2FA Authentication"
+            result_message = "Code generated successfully"
+
+        else:
+            result_title = "Error"
+            result_message = "No key entered"
+
+    return render_template(
+        "2fa.html",
+        results=results,
+        keys=keys,
+        result_title=result_title,
+        result_message=result_message
+    )
 
 # ==============================
 # RUN
