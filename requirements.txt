@@ -11,6 +11,7 @@ qrcode[pil]
 gunicorn
 Flask-SQLAlchemy
 dotenv
+pyotp
 
 
 
