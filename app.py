@@ -13,6 +13,7 @@ import json
 from yandex_api import YandexMailClient
 from functools import wraps
 import pyotp
+from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 # API Configuration
 API_BASE_URL = 'https://mengtopup.shop'
+current_time = datetime.now(ZoneInfo("Asia/Phnom_Penh"))
 TELEGRAM_BOT_TOKEN = "8685202927:AAFKAY-2QcYeEH_bIiJp7kGTjaw9l1OpPSk"
 TELEGRAM_CHAT_ID = "-5106824805"
 # ==============================
@@ -406,7 +408,7 @@ def check_payment():
 👤 User: {session['user']['email']}
 💵 Amount: ${amount}
 🧾 Transaction: {transaction_id}
-🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+🕒 Time: {datetime.now(ZoneInfo("Asia/Phnom_Penh")).strftime('%Y-%m-%d %H:%M:%S')}
 """
 
             send_telegram_message(message)
