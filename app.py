@@ -24,7 +24,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 # API Configuration
 API_BASE_URL = 'https://mengtopup.shop'
-
+TELEGRAM_BOT_TOKEN = "8685202927:AAFKAY-2QcYeEH_bIiJp7kGTjaw9l1OpPSk"
+TELEGRAM_CHAT_ID = "-5106824805"
 # ==============================
 # HELPER FUNCTIONS
 # ==============================
@@ -359,12 +360,15 @@ def check_payment():
     transaction_id = request.form.get("transaction_id")
 
     # Get transaction from API
-    transaction_response = api_request('GET', f'/api/users/{session["user"]["id"]}/transactions/{transaction_id}',
-                                      user_id=session['user']['id'])
-    
+    transaction_response = api_request(
+        'GET',
+        f'/api/users/{session["user"]["id"]}/transactions/{transaction_id}',
+        user_id=session['user']['id']
+    )
+
     if not transaction_response.get('success'):
         return jsonify({'error': 'Transaction not found'}), 404
-    
+
     transaction = transaction_response.get('transaction', {})
     status = transaction.get('status')
     md5 = transaction.get('md5_hash')
@@ -384,12 +388,28 @@ def check_payment():
     new_status = response.json().get("status")
 
     if new_status == "PAID":
+
         # Update transaction status via API
-        update_response = api_request('POST', f'/api/users/{session["user"]["id"]}/transactions/{transaction_id}/paid',
-                                     user_id=session['user']['id'])
-        
+        update_response = api_request(
+            'POST',
+            f'/api/users/{session["user"]["id"]}/transactions/{transaction_id}/paid',
+            user_id=session['user']['id']
+        )
+
         if update_response.get('success'):
+
             print(f"Payment credited via API for transaction: {transaction_id}")
+
+            message = f"""
+💰 <b>New Deposit Received</b>
+
+👤 User: {session['user']['email']}
+💵 Amount: ${amount}
+🧾 Transaction: {transaction_id}
+🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+            send_telegram_message(message)
 
     return jsonify({"status": new_status})
 
@@ -745,6 +765,18 @@ def twofa():
         result_message=result_message
     )
 
+def send_telegram_message(message):
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        data = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": message,
+            "parse_mode": "HTML"
+        }
+        requests.post(url, data=data, timeout=10)
+    except Exception as e:
+        print("Telegram Error:", e)
+        
 # ==============================
 # RUN
 # ==============================
