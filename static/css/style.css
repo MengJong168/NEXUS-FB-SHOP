@@ -1073,15 +1073,20 @@ main {
 
 /* Account Cards */
 .account-card {
-    background: white;
+    background: #0d1220;
+    border: 2px solid #00ff00;
+    color: #00ff00;
     border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: #0d1220;
     padding: 25px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+
 .account-card-bal {
     background: #0d1220;
+    border: 2px solid #00ff00;
+    color: #00ff00;
     border-radius: 16px;
     box-shadow: #0d1220;
     padding: 25px;
@@ -1242,14 +1247,15 @@ main {
 .deposit-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #65574c, #e85c00);
-    color: white;
-    border: none;
+    background: #00ff00;
+    color: #000000;
+    border: 2px solid #000000;
     border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-top: 5px;
 }
 
 .deposit-btn:hover {
@@ -1260,7 +1266,7 @@ main {
 
 .method-note {
     font-size: 12px;
-    color: #999;
+    color: #ffffff;
     text-align: center;
 }
 
